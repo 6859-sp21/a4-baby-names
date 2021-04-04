@@ -5,7 +5,7 @@ const namesByStatePath = "./namesbystate"
 const namesPath = "./allnames.csv"
 
 d3.csv(namesPath, d3.autoType).then(namesData => {
-namesData = namesData.filter(d => d.year === 2000 && ["John", "Ashley"].indexOf(d.name) >= 0);
+namesData = namesData.filter(d => d.year === 2000 && ["John", "Ashley", "Kim", "Steve"].indexOf(d.name) >= 0);
 const height = 400; // TODO make this some percentage of the screen/adjust to window size
 const width = 500; // TODO make this some percentage of the screen/adjust to window size
 const margin = ({top: 20, right: 30, bottom: 30, left: 40})
@@ -18,17 +18,37 @@ let xScale = d3.scaleLinear()
 let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
   .domain(["John", "Ashley"]);
 
+
   const svg = d3.create('svg')
-    .attr('width', width)
+    .attr('width', width*4)
     .attr('height', height);
 
+    const bandHeight = height / 4;
+
+  const bandScale = d3
+  .scaleBand()
+  .domain(["John", "Ashley", "Steve", "Kim"])
+  .range([0, height])
+
+  const bandGender = d3
+  .scaleBand()
+  .domain(["M", "F"])
+  .range([0, bandHeight])
+
+  // const barHeight = "25px";
+
+  console.log(bandScale("Ashley"))
 
   svg.append('g')
     .selectAll('rect') // d3-shape functions (like d3.symbol) generate attributes for SVG <path> elements
     .data(namesData)
     .join('rect')
     .attr('width', d => `${xScale(d.count)}px`)
+    .attr('height', '50px')
     .attr('fill', d => colorScale(d.name))
+    .attr('x', 0)
+    .attr('text', 'hello')
+    .attr('y', d => bandScale(d.name) + bandGender(d.sex))
     //.attr('d', d => symbol('rect')) // Notice, the output of the d3.symbol is wired up to the "d" attribute.
   
     document.getElementById("chart").appendChild(svg.node());
