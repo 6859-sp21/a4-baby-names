@@ -39,20 +39,50 @@ let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
 
   console.log(bandScale("Ashley"))
 
-  svg.append('g')
-    .selectAll('rect') // d3-shape functions (like d3.symbol) generate attributes for SVG <path> elements
-    .data(namesData)
-    .join('rect')
-    .attr('width', d => `${xScale(d.count)}px`)
-    .attr('height', '50px')
-    .attr('fill', d => colorScale(d.name))
-    .attr('x', 0)
-    .attr('text', 'hello')
-    .attr('y', d => bandScale(d.name) + bandGender(d.sex))
+  // let g = svg.append('g');
+  //   g
+  //   .selectAll('g') // d3-shape functions (like d3.symbol) generate attributes for SVG <path> elements
+  //   .data(namesData)
+  //   .join('rect')
+  //   .attr('width', d => `${xScale(d.count)}px`)
+  //   .attr('height', '50px')
+  //   .attr('fill', d => colorScale(d.sex))
+  //   .attr('x', 0)
+  //   .attr('class', 'bar')
+  //   .attr('y', d => bandScale(d.name) + bandGender(d.sex))
+    
+    // .selectAll('text') // d3-shape functions (like d3.symbol) generate attributes for SVG <path> elements
+    // .data(namesData)
+    // .attr('width', d => `${xScale(d.count)}px`)
+    // .attr('height', '50px')
+    // .attr('x', 0)
+    // .attr('class', 'bar')
+    // .attr('y', d => bandScale(d.name) + bandGender(d.sex))
+    // .text(d => d.name)
+    
     //.attr('d', d => symbol('rect')) // Notice, the output of the d3.symbol is wired up to the "d" attribute.
   
-    document.getElementById("chart").appendChild(svg.node());
 
+  let bar = svg.selectAll("g")
+    .data(namesData)
+    .enter().append("g")
+    .attr("transform", function(d, i) { return "translate(0," + (bandScale(d.name) + bandGender(d.sex)) + ")"; });
+
+bar.append("rect")
+    // .data(namesData)
+    // .join('rect')
+    .attr('fill', d => colorScale(d.sex))
+    .attr("width", d => xScale(d.count))
+    .attr("height", 50);
+
+bar.append("text")
+    .attr("x", function(d) { return xScale(d.count) + 10; })
+    .attr("y", "25px")
+    .text(function(d) { return "Name: " + d.name + ", Sex: " + d.sex; });
+
+document.getElementById("chart").appendChild(svg.node());
+
+    
   const container = d3.create('div');
   
   container.selectAll('div')
