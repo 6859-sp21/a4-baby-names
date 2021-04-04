@@ -1,14 +1,34 @@
 
 // import * as d3 from "d3";
 const namesByStatePath = "./namesbystate"
-//columns: name, sex, count, year, index
+//columns: name, sex, count, year, index, will append rank
 const namesPath = "./allnames.csv"
 
+function addRanksByYear(data){
+  let thing = d3.group(data, d => d.year);
+  thing.forEach((yearData, year, map) => {
+    yearData.sort((a,b) => (a.count > b.count)? -1: 1);
+    yearData.forEach((d, index) =>
+        d["rank"] = index);
+  });
+}
+
 d3.csv(namesPath, d3.autoType).then(namesData => {
-namesData = namesData.filter(d => d.year === 2000 && ["John", "Ashley", "Kim", "Steve"].indexOf(d.name) >= 0);
+namesData = namesData.filter(d => (d.year === 2000));
+
+// list.sort((a, b) => (a.color > b.color) ? 1 : -1)
+
+// Update date to have a rank for each year
+addRanksByYear(namesData);
+
+// names = new Set(data.map(d => d.name))
+
 const height = 400; // TODO make this some percentage of the screen/adjust to window size
 const width = 500; // TODO make this some percentage of the screen/adjust to window size
 const margin = ({top: 20, right: 30, bottom: 30, left: 40})
+
+const n = 18;
+namesData = namesData.filter(d => (d.rank < n));
 
 console.log(namesData)
 let xScale = d3.scaleLinear()
@@ -23,21 +43,21 @@ let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
     .attr('width', width*4)
     .attr('height', height);
 
-    const bandHeight = height / 4;
+    const bandHeight = height / n;
 
   const bandScale = d3
   .scaleBand()
-  .domain(["John", "Ashley", "Steve", "Kim"])
+  .domain(d3.range(n))
   .range([0, height])
 
   const bandGender = d3
   .scaleBand()
   .domain(["M", "F"])
-  .range([0, bandHeight])
+  .range([0, bandScale.bandwidth()])
 
   // const barHeight = "25px";
 
-  console.log(bandScale("Ashley"))
+  // console.log(bandScale("Ashley"))
 
   // let g = svg.append('g');
   //   g
@@ -59,26 +79,27 @@ let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
     // .attr('class', 'bar')
     // .attr('y', d => bandScale(d.name) + bandGender(d.sex))
     // .text(d => d.name)
-    
     //.attr('d', d => symbol('rect')) // Notice, the output of the d3.symbol is wired up to the "d" attribute.
-  
+    // nameframes = d3.groups(keyframes.flatMap(([, data]) => data), d => d.name)
+    // prev = new Map(nameframes.flatMap(([, data]) => d3.pairs(data, (a, b) => [b, a])))
+    
+    console.log(bandScale.bandwidth()/2);
 
   let bar = svg.selectAll("g")
     .data(namesData)
     .enter().append("g")
-    .attr("transform", function(d, i) { return "translate(0," + (bandScale(d.name) + bandGender(d.sex)) + ")"; });
+    .attr("transform", function(d, i) { return "translate(0," + (bandScale(d.rank)) + ")"; });
 
 bar.append("rect")
-    // .data(namesData)
-    // .join('rect')
-    .attr('fill', d => colorScale(d.sex))
+    .attr('fill', d => colorScale(d.rank))
     .attr("width", d => xScale(d.count))
-    .attr("height", 50);
+    .attr("height", bandScale.bandwidth() - 2);
 
 bar.append("text")
-    .attr("x", function(d) { return xScale(d.count) + 10; })
-    .attr("y", "25px")
-    .text(function(d) { return "Name: " + d.name + ", Sex: " + d.sex; });
+    .attr("x", function(d) { return 10; })
+    .attr("y", d => bandScale.bandwidth()/2 + 4)
+    .attr("fill", "white")
+    .text(function(d) { return "Name: " + d.name + ", Sex: " + d.sex + ", Count: " + d.count;});
 
 document.getElementById("chart").appendChild(svg.node());
 
