@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<script src='https://d3js.org/d3.v4.min.js'></script>
+
+<title>
+  A4 Playground
+</title>
+
+<head>
+  <link rel="stylesheet" href="./babies.css">
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+ <body>
+  <h1>
+    A4 Playground
+  </h1>
+  <!-- Add a bit of text -->
+  <p>This is just where I am experimenting with some d3 things. Hello Hello BENTON</p>
+
+
+  <div class="slidecontainer">
+    <input type="range" min="1880" max="2019" value="2000" class="slider" id="myRange" style='width:100%'>
+    <p id ="yearval">Year : 2000</p>
+    <button type="button" id="playbutton">Play </button>
+    <button type="button" id="resetbutton">Reset </button>
+  </div>
+
+  <div id="chart">
+  </div>
+  <script src="./babies.js"></script>
+ </body>
