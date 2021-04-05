@@ -14,7 +14,7 @@ function addRanksByYear(data){
 }
 
 d3.csv(namesPath, d3.autoType).then(namesData => {
-namesData = namesData.filter(d => (d.year >= 1990 && (d.name === "Emily" || d.name === "Jacob" || d.name === "Michael")));
+namesData = namesData.filter(d => (d.year >= 1950));
 
 // list.sort((a, b) => (a.color > b.color) ? 1 : -1)
 
@@ -135,8 +135,8 @@ function doDataJoin(namesData, svg, year){
   .domain(d3.range(n))
   .range([0, height])
   const transition = svg.transition()
-  .duration(250)
-  .ease(d3.easeLinear);
+  .duration(500)
+  .ease(d3.easeCubic);
 
   // let thing = svg.append("g")
   //   .
@@ -145,31 +145,41 @@ function doDataJoin(namesData, svg, year){
   let bars = svg.selectAll("g")
       .data(filteredData, d => {console.log(d.name); console.log(d.sex); return d.name.toString() + d.sex})
       .join(
-        enter => enter.append("g"),
+        enter => enter.append("g").attr("transform", function(d, i) { console.log(d); return "translate(-" + xScale(d.count) + "," + (bandScale(d.rank)) + ")"; }),
             // .attr("width", d => xScale(d.count))
             // .attr("stroke", (d, i) => "black")
             // .attr("height", bandScale.bandwidth() - 2),
         update => update,//.selectAll('rect')
         // .attr("width", 5)
         // .attr("stroke", (d, i) => "yellow"),
-        function(exit){ console.log("exiting");console.log(exit.size()); exit = exit.remove(); console.log(exit.size()); return exit;},
+        function(exit){ return exit.transition(transition).attr("transform", function(d, i) { return "translate(-" + xScale(d.count) + "," + (bandScale(d.rank)) + ")"; }).remove();},
       )
-        .attr("transform", function(d, i) { console.log(d); return "translate(0," + (bandScale(d.rank)) + ")"; })
+        // .attr("transform", function(d, i) { console.log(d); return "translate(0," + (bandScale(d.rank)) + ")"; });
         // .attr("fill", (d, i) => "green")
         // .attr("width", d => xScale(d.count))
         // .attr("height", bandScale.bandwidth() - 2)
         // .attr("x", function(d) { return 0; })
         // .attr("y", d => bandScale(d.rank));
+    bars.transition(transition)
+    .attr("transform", function(d, i) { console.log(d); return "translate(0," + (bandScale(d.rank)) + ")"; });
 
     bars.selectAll("rect")
         .data(filteredData)
-        .join("rect");
+        .join(
+          enter => enter.append('rect')
+            .attr("width", d => xScale(d.count)),
+          update => update,
+          exit => exit.remove()
+        )
 
     bars.select("rect")
         .data(filteredData)
-        .attr("width", d => xScale(d.count))
         .attr("height", bandScale.bandwidth() - 2)
-        .attr('fill', d => colorScale(d.name.length));
+        .attr('fill', d => colorScale(d.name.length))
+        .transition(transition)
+        .duration(750)
+        .ease(d3.easeQuadOut)
+        .attr("width", d => xScale(d.count))
 
     bars.selectAll("text")
         .data(filteredData)
