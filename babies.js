@@ -14,7 +14,7 @@ function addRanksByYear(data){
 }
 
 d3.csv(namesPath, d3.autoType).then(namesData => {
-namesData = namesData.filter(d => (d.year > 1950));
+namesData = namesData.filter(d => (d.year >= 1890));
 
 // list.sort((a, b) => (a.color > b.color) ? 1 : -1)
 
@@ -80,6 +80,7 @@ let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
     console.log(range.value);
     range.addEventListener('input', function(){
       console.log(range.value);
+      document.getElementById("yearval").innerText = "Year : " + range.value;
       doDataJoin(namesData, svg, range.value);
       console.log("after");
     });
@@ -107,7 +108,7 @@ function doDataJoin(namesData, svg, year){
 
   bar.selectAll("rect")
     .remove();
-    bar.selectAll("text")
+  bar.selectAll("text")
     .remove();
 
   bar.append("rect")
@@ -120,7 +121,7 @@ function doDataJoin(namesData, svg, year){
       .attr("y", d => bandScale.bandwidth()/2 + 4)
       .attr("fill", "white")
       .attr("font-size", bandScale.bandwidth()/2)
-      .text(function(d) { return "Name: " + d.name + ", Sex: " + d.sex + ", Count: " + d.count;});
+      .text(function(d) { return d.name + ", " + d.sex + ", " + d.count;});
 }
 
 
