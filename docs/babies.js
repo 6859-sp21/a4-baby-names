@@ -43,14 +43,28 @@ const margin = ({top: 20, right: 30, bottom: 30, left: 40})
 
 const n = 20;
 namesData = namesData.filter(d => (d.rank < n));
+const colorScheme = d3.schemeCategory20;
+const nColors = colorScheme.length;
 
+function hashCode(name){
+  let base = 0;
+  for (let i = 0; i < name.length; i++){
+    base += name.charCodeAt(i)*(i+1);
+  }
+  return base % nColors;
+} 
 console.log(namesData)
 let xScale = d3.scaleLinear()
   .domain([0, d3.max(namesData, d => d.count)]) // TODO this should adjust based on the year
   .range([margin.left, width - margin.right])
 
-let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
-  .domain(["John", "Ashley"]);
+let colorScale = d3.scaleOrdinal()
+  .domain([...Array(nColors).keys()])
+  .range(colorScheme);
+
+
+// let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
+//   .domain(["John", "Ashley"]);
 
 
   const svg = d3.create('svg')
@@ -218,11 +232,12 @@ function doDataJoin(namesData, svg, year){
     bars.select("rect")
         .data(filteredData)
         .attr("height", bandScale.bandwidth() - 2)
-        .attr('fill', d => colorScale(d.name.length))
+        .attr('fill', d => colorScale(hashCode(d.name)))
         .transition(transition)
         .duration(750)
         .ease(d3.easeQuadOut)
         .attr("width", d => xScale(d.count))
+        .style("opacity", 0.8)
 
     bars.selectAll("text")
         .data(filteredData)
