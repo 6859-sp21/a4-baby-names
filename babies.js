@@ -16,6 +16,7 @@
 const namesByStatePath = "./namesbystate"
 //columns: name, sex, count, year, index, will append rank
 const namesPath = "./allnames.csv"
+year = 1880;
 
 function addRanksByYear(data){
   let thing = d3.group(data, d => d.year);
@@ -27,7 +28,7 @@ function addRanksByYear(data){
 }
 
 d3.csv(namesPath, d3.autoType).then(namesData => {
-namesData = namesData.filter(d => (d.year >= 1890));
+namesData = namesData.filter(d => (d.year >= 1880));
 
 // list.sort((a, b) => (a.color > b.color) ? 1 : -1)
 
@@ -89,6 +90,12 @@ let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
     // nameframes = d3.groups(keyframes.flatMap(([, data]) => data), d => d.name)
     // prev = new Map(nameframes.flatMap(([, data]) => d3.pairs(data, (a, b) => [b, a])))
     // let prevdata = namesData;
+
+    function pause(){
+      timing = false;
+      window.clearInterval(number);
+      document.getElementById("playbutton").innerText = "Play";
+    }
     let range = document.getElementById('myRange');
     range.addEventListener('input', function(){
       document.getElementById("yearval").innerText = "Year : " + range.value;
@@ -96,19 +103,26 @@ let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
     });
     let timing = false;
     let number = -1;
-    let button = document.getElementById('bentonsbutton');
-    button.addEventListener('click', function(){
+    let playbutton = document.getElementById('playbutton');
+    playbutton.addEventListener('click', function(){
       document.getElementById("yearval").innerText = "Year : " + range.value;
       doDataJoin(namesData, svg, range.value);
       if (timing){
-        timing = false;
-        window.clearInterval(number);
+        pause();
       }
       else{
         number = window.setInterval(incrementYear, 500);
         timing = true;
+        document.getElementById("playbutton").innerText = "Pause";
       }
-      
+    });
+
+    let resetbutton = document.getElementById('resetbutton');
+    resetbutton.addEventListener('click', function(){
+      year = 1880;
+      document.getElementById("yearval").innerText = "Year : " + year;
+      document.getElementById("myRange").value = String(year);
+      doDataJoin(namesData, svg, 1880)
     });
 
   
@@ -224,13 +238,15 @@ function doDataJoin(namesData, svg, year){
 
     bars.exit().remove();
   }
-
-  year = 1890;
   function incrementYear(){
     doDataJoin(namesData, svg, year);
     document.getElementById("yearval").innerText = "Year : " + year;
     document.getElementById("myRange").value = String(year);
     year += 1;
+    if (year >= 2020){
+      year = 2019;
+      pause();
+    }
   }
     
 
