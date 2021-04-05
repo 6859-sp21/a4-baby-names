@@ -1,3 +1,16 @@
+// TODO
+// General aesthetic
+// Play/pause button
+// restart
+// drag slider during play
+// input name to see on chart
+// choose number of names?
+// Gender/sex
+// fix infinite button
+//style button 
+// add titles and margins and make code not gross 
+// Better bar colors
+
 
 // import * as d3 from "d3";
 const namesByStatePath = "./namesbystate"
@@ -14,7 +27,7 @@ function addRanksByYear(data){
 }
 
 d3.csv(namesPath, d3.autoType).then(namesData => {
-namesData = namesData.filter(d => (d.year >= 1950));
+namesData = namesData.filter(d => (d.year >= 1890));
 
 // list.sort((a, b) => (a.color > b.color) ? 1 : -1)
 
@@ -23,7 +36,7 @@ addRanksByYear(namesData);
 
 // names = new Set(data.map(d => d.name))
 
-const height = 1000; // TODO make this some percentage of the screen/adjust to window size
+const height = 600; // TODO make this some percentage of the screen/adjust to window size
 const width = 500; // TODO make this some percentage of the screen/adjust to window size
 const margin = ({top: 20, right: 30, bottom: 30, left: 40})
 
@@ -80,6 +93,22 @@ let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
     range.addEventListener('input', function(){
       document.getElementById("yearval").innerText = "Year : " + range.value;
       doDataJoin(namesData, svg, range.value);
+    });
+    let timing = false;
+    let number = -1;
+    let button = document.getElementById('bentonsbutton');
+    button.addEventListener('click', function(){
+      document.getElementById("yearval").innerText = "Year : " + range.value;
+      doDataJoin(namesData, svg, range.value);
+      if (timing){
+        timing = false;
+        window.clearInterval(number);
+      }
+      else{
+        number = window.setInterval(incrementYear, 500);
+        timing = true;
+      }
+      
     });
 
   
@@ -152,7 +181,7 @@ function doDataJoin(namesData, svg, year){
         update => update,//.selectAll('rect')
         // .attr("width", 5)
         // .attr("stroke", (d, i) => "yellow"),
-        function(exit){ return exit.transition(transition).attr("transform", function(d, i) { return "translate(-" + xScale(d.count) + "," + (bandScale(d.rank)) + ")"; }).remove();},
+        function(exit){ return exit.attr("transform", function(d, i) { return "translate(-" + xScale(d.count) + "," + (bandScale(d.rank)) + ")"; }).remove();},
       )
         // .attr("transform", function(d, i) { console.log(d); return "translate(0," + (bandScale(d.rank)) + ")"; });
         // .attr("fill", (d, i) => "green")
@@ -194,7 +223,15 @@ function doDataJoin(namesData, svg, year){
         .text(function(d) { return d.name + ", " + d.sex + ", " + d.count});
 
     bars.exit().remove();
-    
+  }
+
+  year = 1890;
+  function incrementYear(){
+    doDataJoin(namesData, svg, year);
+    document.getElementById("yearval").innerText = "Year : " + year;
+    document.getElementById("myRange").value = String(year);
+    year += 1;
+  }
     
 
   // let bar = svg.selectAll("g")
@@ -281,8 +318,6 @@ function doDataJoin(namesData, svg, year){
     // .attr("fill", "white")
     // .attr("font-size", bandScale.bandwidth()/2)
     // .text(function(d) { return d.name + ", " + d.sex + ", " + d.count;});
-    
-}
 
 
     
