@@ -14,7 +14,7 @@ function addRanksByYear(data){
 }
 
 d3.csv(namesPath, d3.autoType).then(namesData => {
-namesData = namesData.filter(d => (d.year >= 1990 && (d.name === "Jacob" || d.name === "Michael")));
+namesData = namesData.filter(d => (d.year >= 1990 && (d.name === "Emily" || d.name === "Jacob" || d.name === "Michael")));
 
 // list.sort((a, b) => (a.color > b.color) ? 1 : -1)
 
@@ -77,12 +77,9 @@ let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
     // prev = new Map(nameframes.flatMap(([, data]) => d3.pairs(data, (a, b) => [b, a])))
     // let prevdata = namesData;
     let range = document.getElementById('myRange');
-    console.log(range.value);
     range.addEventListener('input', function(){
-      console.log(range.value);
       document.getElementById("yearval").innerText = "Year : " + range.value;
       doDataJoin(namesData, svg, range.value);
-      console.log("after");
     });
 
   
@@ -130,10 +127,6 @@ document.getElementById("chart").appendChild(svg.node());
 // }
 
 
-
-
-
-
 function doDataJoin(namesData, svg, year){
 
   let filteredData = namesData.filter(d => d.year === parseInt(year));
@@ -145,6 +138,10 @@ function doDataJoin(namesData, svg, year){
   .duration(250)
   .ease(d3.easeLinear);
 
+  // let thing = svg.append("g")
+  //   .
+
+
   let bars = svg.selectAll("g")
       .data(filteredData, d => {console.log(d.name); console.log(d.sex); return d.name.toString() + d.sex})
       .join(
@@ -155,7 +152,7 @@ function doDataJoin(namesData, svg, year){
         update => update,//.selectAll('rect')
         // .attr("width", 5)
         // .attr("stroke", (d, i) => "yellow"),
-        exit => exit.remove()
+        function(exit){ console.log("exiting");console.log(exit.size()); exit = exit.remove(); console.log(exit.size()); return exit;},
       )
         .attr("transform", function(d, i) { console.log(d); return "translate(0," + (bandScale(d.rank)) + ")"; })
         // .attr("fill", (d, i) => "green")
@@ -163,16 +160,33 @@ function doDataJoin(namesData, svg, year){
         // .attr("height", bandScale.bandwidth() - 2)
         // .attr("x", function(d) { return 0; })
         // .attr("y", d => bandScale(d.rank));
+
     bars.selectAll("rect")
-        .data(filteredData, d =>  d.name.toString() + d.sex)
+        .data(filteredData)
         .join("rect");
 
-
     bars.select("rect")
-        .data(filteredData, d =>  d.name.toString() + d.sex)
+        .data(filteredData)
         .attr("width", d => xScale(d.count))
         .attr("height", bandScale.bandwidth() - 2)
-        .attr('fill', d => colorScale(d.name.length))
+        .attr('fill', d => colorScale(d.name.length));
+
+    bars.selectAll("text")
+        .data(filteredData)
+        .join("text");
+        
+    bars.select("text")
+        .data(filteredData)     
+        .attr("x", function(d) { return 10; })
+        .attr("y", d => bandScale.bandwidth()/2 + 4)
+        .attr("fill", "black")
+        .attr("font-size", bandScale.bandwidth()/2)
+        .text(function(d) { return d.name + ", " + d.sex + ", " + d.count});
+
+    bars.exit().remove();
+    
+    
+
   // let bar = svg.selectAll("g")
   // .data(filteredData, d => d.name +' ' + d.sex)
   // .join(
