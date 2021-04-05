@@ -14,7 +14,7 @@ function addRanksByYear(data){
 }
 
 d3.csv(namesPath, d3.autoType).then(namesData => {
-namesData = namesData.filter(d => (d.year === 2000));
+namesData = namesData.filter(d => (d.year > 1950));
 
 // list.sort((a, b) => (a.color > b.color) ? 1 : -1)
 
@@ -23,11 +23,11 @@ addRanksByYear(namesData);
 
 // names = new Set(data.map(d => d.name))
 
-const height = 400; // TODO make this some percentage of the screen/adjust to window size
+const height = 1000; // TODO make this some percentage of the screen/adjust to window size
 const width = 500; // TODO make this some percentage of the screen/adjust to window size
 const margin = ({top: 20, right: 30, bottom: 30, left: 40})
 
-const n = 18;
+const n = 40;
 namesData = namesData.filter(d => (d.rank < n));
 
 console.log(namesData)
@@ -45,15 +45,8 @@ let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
 
     const bandHeight = height / n;
 
-  const bandScale = d3
-  .scaleBand()
-  .domain(d3.range(n))
-  .range([0, height])
 
-  const bandGender = d3
-  .scaleBand()
-  .domain(["M", "F"])
-  .range([0, bandScale.bandwidth()])
+
 
   // const barHeight = "25px";
 
@@ -83,50 +76,82 @@ let colorScale = d3.scaleOrdinal(d3.schemeTableau10)
     // nameframes = d3.groups(keyframes.flatMap(([, data]) => data), d => d.name)
     // prev = new Map(nameframes.flatMap(([, data]) => d3.pairs(data, (a, b) => [b, a])))
     
-    console.log(bandScale.bandwidth()/2);
+    let range = document.getElementById('myRange');
+    console.log(range.value);
+    range.addEventListener('input', function(){
+      console.log(range.value);
+      doDataJoin(namesData, svg, range.value);
+      console.log("after");
+    });
 
-  let bar = svg.selectAll("g")
-    .data(namesData)
-    .enter().append("g")
-    .attr("transform", function(d, i) { return "translate(0," + (bandScale(d.rank)) + ")"; });
-
-bar.append("rect")
-    .attr('fill', d => colorScale(d.rank))
-    .attr("width", d => xScale(d.count))
-    .attr("height", bandScale.bandwidth() - 2);
-
-bar.append("text")
-    .attr("x", function(d) { return 10; })
-    .attr("y", d => bandScale.bandwidth()/2 + 4)
-    .attr("fill", "white")
-    .text(function(d) { return "Name: " + d.name + ", Sex: " + d.sex + ", Count: " + d.count;});
-
+  
+doDataJoin(namesData, svg, 2000);
 document.getElementById("chart").appendChild(svg.node());
 
-    
-  const container = d3.create('div');
-  
-  container.selectAll('div')
-  .data(namesData)
-  .join('div')
-    .style('background', d => colorScale(d.sex))
-    .style('border', '1px solid white')
-    .style('font-size', 'small')
-    .style('color', 'white')
-    .style('text-align', 'right')
-    .style('padding', '3px')
-    .style('width', d => `${xScale(d.count)}px`) // Use "xScale" instead of a magic number here.
-    .text(d => d.count + " name is " + d.name + " sex " + d.sex);
+function doDataJoin(namesData, svg, year){
 
-// return container.node();
-document.getElementById("chart").appendChild(container.node());
+  let filteredData = namesData.filter(d => d.year === parseInt(year));
+  const bandScale = d3
+  .scaleBand()
+  .domain(d3.range(n))
+  .range([0, height])
+
+  let bar = svg.selectAll("g")
+  .data(filteredData)
+  .join(
+    enter  => enter.append('g'),
+    update => update,
+    exit   => exit.remove()
+  )
+  .attr("transform", function(d, i) { return "translate(0," + (bandScale(d.rank)) + ")"; });
+
+  bar.selectAll("rect")
+    .remove();
+    bar.selectAll("text")
+    .remove();
+
+  bar.append("rect")
+      .attr('fill', d => colorScale(d.name.length))
+      .attr("width", d => xScale(d.count))
+      .attr("height", bandScale.bandwidth() - 2);
+
+  bar.append("text")
+      .attr("x", function(d) { return 10; })
+      .attr("y", d => bandScale.bandwidth()/2 + 4)
+      .attr("fill", "white")
+      .attr("font-size", bandScale.bandwidth()/2)
+      .text(function(d) { return "Name: " + d.name + ", Sex: " + d.sex + ", Count: " + d.count;});
+}
+
+
+    
+//   const container = d3.create('div');
+  
+//   container.selectAll('div')
+//   .data(namesData)
+//   .join('div')
+//     .style('background', d => colorScale(d.sex))
+//     .style('border', '1px solid white')
+//     .style('font-size', 'small')
+//     .style('color', 'white')
+//     .style('text-align', 'right')
+//     .style('padding', '3px')
+//     .style('width', d => `${xScale(d.count)}px`) // Use "xScale" instead of a magic number here.
+//     .text(d => d.count + " name is " + d.name + " sex " + d.sex);
+// console.log("data join");
+// // return container.node();
+
+  
+
+// document.getElementById("chart").appendChild(container.node());
 
 
 // const updateBars = bars(svg);
 // const updateAxis = axis(svg);
 // const updateLabels = labels(svg);
 // const updateTicker = ticker(svg);
-return svg.node();
+
+// return svg.node();
 }
 );
 // yield svg.node();
