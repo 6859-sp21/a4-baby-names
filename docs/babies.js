@@ -16,7 +16,7 @@
 const namesByStatePath = "./namesbystate"
 //columns: name, sex, count, year, index, will append rank
 const namesPath = "./allnames.csv"
-year = 1880;
+// year = 1880;
 
 function addRanksByYear(data){
   let thing = d3.group(data, d => d.year);
@@ -53,7 +53,7 @@ function hashCode(name){
   }
   return base % nColors;
 } 
-console.log(namesData)
+// console.log(namesData)
 let xScale = d3.scaleLinear()
   .domain([0, d3.max(namesData, d => d.count)]) // TODO this should adjust based on the year
   .range([margin.left, width - margin.right])
@@ -127,7 +127,7 @@ let colorScale = d3.scaleOrdinal()
     let number = -1;
     let playbutton = document.getElementById('playbutton');
     playbutton.addEventListener('click', function(){
-      document.getElementById("tyear").value = range.value;
+      textYear.value = range.value;
       document.getElementById("yearval").innerText = "Year : " + range.value;
       doDataJoin(namesData, svg, range.value);
       if (timing){
@@ -143,8 +143,9 @@ let colorScale = d3.scaleOrdinal()
     let resetbutton = document.getElementById('resetbutton');
     resetbutton.addEventListener('click', function(){
       year = 1880;
-      document.getElementById("yearval").innerText = "Year : " + year;
-      document.getElementById("myRange").value = String(year);
+      range.value = 1880;
+      textYear.value = 1880;
+      document.getElementById("yearval").innerText = "Year : " + document.getElementById("myRange").value;
       doDataJoin(namesData, svg, 1880)
     });
 
@@ -209,9 +210,9 @@ function doDataJoin(namesData, svg, year){
 
 
   let bars = svg.selectAll("g")
-      .data(filteredData, d => {console.log(d.name); console.log(d.sex); return d.name.toString() + d.sex})
+      .data(filteredData, d => {return d.name.toString() + d.sex})
       .join(
-        enter => enter.append("g").attr("transform", function(d, i) { console.log(d); return "translate(-" + xScale(d.count) + "," + (bandScale(d.rank)) + ")"; }),
+        enter => enter.append("g").attr("transform", function(d, i) { return "translate(-" + xScale(d.count) + "," + (bandScale(d.rank)) + ")"; }),
             // .attr("width", d => xScale(d.count))
             // .attr("stroke", (d, i) => "black")
             // .attr("height", bandScale.bandwidth() - 2),
@@ -263,13 +264,13 @@ function doDataJoin(namesData, svg, year){
     bars.exit().remove();
   }
   function incrementYear(){
-    doDataJoin(namesData, svg, year);
-    document.getElementById("tyear").value = range.value;
-    document.getElementById("yearval").innerText = "Year : " + year;
-    document.getElementById("myRange").value = String(year);
-    year += 1;
-    if (year >= 2020){
-      year = 2019;
+    console.log(range.value);
+    doDataJoin(namesData, svg, range.value);
+    textYear.value = range.value;
+    document.getElementById("yearval").innerText = "Year : " + range.value;
+    document.getElementById("myRange").value = parseInt(range.value) + 1;
+    if (parseInt(range.value) >= 2020){
+       range.value = 2019;
       pause();
     }
   }
