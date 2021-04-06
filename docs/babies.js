@@ -112,17 +112,41 @@ let colorScale = d3.scaleOrdinal()
     }
     let range = document.getElementById('myRange');
     range.addEventListener('input', function(){
-      document.getElementById("tyear").value = range.value;
+      textYear.value = range.value;
       document.getElementById("yearval").innerText = "Year : " + range.value;
       doDataJoin(namesData, svg, range.value);
     });
 
     let textYear = document.getElementById("tyear");
+    textYear.value = range.value;
     textYear.addEventListener('change', function(){
-      document.getElementById("myRange").value = textYear.value;
+      range.value = textYear.value;
       document.getElementById("yearval").innerText = "Year : " + textYear.value;
       doDataJoin(namesData, svg, range.value);
     })
+
+    let prevButton = document.getElementById("prevbutton");
+    prevButton.addEventListener('click', function(){
+      range.value = parseInt(range.value)-1;
+      if (parseInt(range.value) <1880){
+        range.value = 1880;
+      }
+      textYear.value = parseInt(range.value);
+      document.getElementById("yearval").innerText = "Year : " + range.value;
+      doDataJoin(namesData, svg, range.value);
+    });
+
+    let nextButton = document.getElementById("nextbutton");
+    nextButton.addEventListener('click', function(){
+      range.value = parseInt(range.value)+1;
+      if (parseInt(range.value) >2019){
+        range.value = 2019;
+      }
+      textYear.value = parseInt(range.value);
+      document.getElementById("yearval").innerText = "Year : " + range.value;
+      doDataJoin(namesData, svg, range.value);
+    });
+
     let timing = false;
     let number = -1;
     let playbutton = document.getElementById('playbutton');
@@ -195,7 +219,7 @@ document.getElementById("chart").appendChild(svg.node());
 
 
 function doDataJoin(namesData, svg, year){
-
+  console.log(year);
   let filteredData = namesData.filter(d => d.year === parseInt(year));
   const bandScale = d3
   .scaleBand()
