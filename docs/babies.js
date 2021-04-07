@@ -42,7 +42,7 @@ const filterSet = new Set();
 
 const n = 20;
 //green, orangey, dark blue, dark red, 
-const colorScheme = ["#50a15b", "#97c7db", "#8155ad", "#9aa16a", "#ed7786", "#7c82bf", "#b56d07", "#e35936", "#8e9191", "#fcba03", "#f7a32d", "#e6b0f5"];
+const colorScheme = ["#fafa8e", "#97c7db", "#8155ad", "#9aa16a", "#ed7786", "#7c82bf", "#b56d07", "#e35936", "#8e9191", "#fcba03",  "#50a15b", "#e6b0f5"];
 // colorScheme.sort();
 const nColors = colorScheme.length;
 const gendersPool = new Set();
