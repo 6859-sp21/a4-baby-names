@@ -3,7 +3,7 @@
 <script src='https://d3js.org/d3.v4.min.js'></script>
 
 <title>
-  A4 Playground
+  Baby Names
 </title>
 
 <head>
@@ -11,33 +11,88 @@
   <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
  <body>
+ <div class="panel">
   <h1>
-    A4 Playground
+    👶 Baby Names Over the Years 👶
   </h1>
+</div>
   <!-- Add a bit of text -->
-  <p>This is just where I am experimenting with some d3 things. Hello Hello BENTON</p>
-
+  <div class="panel">
+    <div class="textinpanel">
+      <p>
+    Click the buttons below to update the chart, or add names to the chart by typing them in the text box (comma seperated works too!).
+  </p>
+</div>
+</div>
+<div class="panel">
+  <div class="textinpanel">
+  <p>
+    You can also click play to see the bars move over the years!
+  </p>
+</div>
+</div>
+<div class="panel">
+  <div class="textinpanel">
+  <p>
+    Click a bar on the chart to freeze/unfreeze a bar onto the chart
+ or to remove it from being held Frozen bars will change with the data, but will still be shown, even if they fall out of the top 10!
+ </p>
+</div>
+</div>
 
   <div class="slidecontainer">
     <input type="range" min="1880" max="2019" value="2000" class="slider" id="myRange" style='width:100%'>
+  </div>
+
+
+
+    <div class="textinpanel">
+      <div>
     <p id ="yearval">Year : 2000</p>
+      </div>
     <button type="button" id="playbutton">Play </button>
     <button type="button" id="resetbutton">Reset </button>
-  </div>
 
   <!-- &#8249 = char code for < 
         &#8250 = char code for 
         jank idk how to add space > -->
 
 <div class="textcontainer">
-  <a href="#" class="previous" id="prevbutton">&#8249;</a>
-  <input type="text" id="tyear" name="tyear" required
+  <button class="button" id="prevbutton">&#8249;</button>
+  <input type="text" id="tyear" name="tyear" value = "2000" required
     minlength="4" maxlength="4" size="10">
-  <a href="#" class="next" id="nextbutton">&#8250;</a>
+  <button class="button" id="nextbutton">&#8250;</button>
   <p></p>
 </div>
 
-  <div id="chart">
+<div class="textcontainer">
+  <input type="text" id="tnames" name="tnames" placeholder="Names here" required
+    minlength="2" maxlength="200" size="15">
+  <button type="button" class="button" id="addbutton">Add </button>
+  <button type="button" class="button" id="clearbutton">Clear </button>
+  <p></p>
+</div>
+
+<div class="malefemaleselectors">
+  <button type="button" class="button-stay" id="both-button">Both</button>
+  <button type="button" class="button-stay" id="female-button">Female </button>
+  <button type="button" class="button-stay" id="male-button">Male </button>
+</div>
+
+</div>
+
+
+<!-- <label for="states">Choose a state:</label>
+<select name="cars" id="elizabeth">
+  <option value="all">All</option>
+  <option value="CA">California</option>
+  <option value="MA">Massachusetts</option>
+  <option value="NE">Nebraska</option>
+</select> -->
+
+  <div id="chart" >
   </div>
   <script src="./babies.js"></script>
+
+
  </body>
