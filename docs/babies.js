@@ -42,8 +42,11 @@ const filterSet = new Set();
 
 const n = 20;
 //green, orangey, dark blue, dark red, 
-const colorScheme = ["#fafa8e", "#97c7db", "#8155ad", "#9aa16a", "#ed7786", "#7c82bf", "#b56d07", "#e35936", "#8e9191", "#fcba03",  "#50a15b", "#e6b0f5"];
+const colorScheme = ["#9aa16a", "#cae0ad", "#8e9191", "#fcba03",  "#50a15b"];
 // colorScheme.sort();
+const selectedColor = colorScheme[1];
+const standardColor = "#D4B483";
+const colors = [selectedColor, standardColor]
 const nColors = colorScheme.length;
 const gendersPool = new Set();
 gendersPool.add("M");
@@ -69,14 +72,10 @@ namesData = namesData.filter(d => (d.rank < n));
 
 
 function hashCode(name, sex){
-  let base = 0;
-  for (let i = 0; i < name.length; i++){
-    base += name.charCodeAt(i)*(i+1);
+  if (filterSet.has(name)){
+    return 0;
   }
-  if (sex === 'F'){
-    return base % (nColors/2) + (nColors/2);
-}
-  return base % (nColors/2);
+  return 1;
 }
 
 let xScale = d3.scaleLinear()
@@ -85,7 +84,7 @@ let xScale = d3.scaleLinear()
 
 let colorScale = d3.scaleOrdinal()
   .domain([...Array(nColors).keys()])
-  .range(colorScheme);
+  .range(colors);
 
 
   const svg = d3.create('svg')
@@ -264,7 +263,7 @@ function doDataJoin(namesData, svg, year){
         .duration(750)
         .ease(d3.easeQuadOut)
         .attr("width", d => xScale(d.count))
-        .attr("stroke", d => (filterSet.has(d.name)) ? "white": "white")
+        // .attr("stroke", d => (filterSet.has(d.name)) ? "white": "white")
         .attr("stroke-width", d => (filterSet.has(d.name)) ? 3: 0)
 
     bars.selectAll("text")
