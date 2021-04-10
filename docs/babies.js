@@ -265,7 +265,7 @@ function doDataJoin(namesData, svg, year){
       .join(
         enter => enter.append("g").attr("transform", function(d, i) { return "translate(-" + (xScale(d.count) + 10) + "," + (bandScale(d.graphRank) + 10) + ")"; }),
         update => update,
-        function(exit){ return exit.attr("transform", function(d, i) { return "translate(-" + (xScale(d.count) + 10) + "," + (bandScale(d.graphRank) + 10) + ")"; }).remove();},
+        exit => exit.remove()
       )
     bars.transition(transition)
     .attr("transform", function(d, i) { return "translate(10," + (bandScale(d.graphRank) + 10) + ")"; });
@@ -273,8 +273,7 @@ function doDataJoin(namesData, svg, year){
     bars.selectAll("rect")
         .data(filteredData)
         .join(
-          enter => enter.append('rect')
-            .attr("width", d => xScale(d.count)),
+          enter => enter.append('rect'),
           update => update,
           exit => exit.remove()
         )
