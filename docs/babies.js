@@ -37,12 +37,12 @@ const namesPath = "./allnames.csv";
 
 const coloradoData = namesByStatePath + "CA.TXT";
 
-const height = 600; // TODO make this some percentage of the screen/adjust to window size
+const height = 800; // TODO make this some percentage of the screen/adjust to window size
 const width = 800; // TODO make this some percentage of the screen/adjust to window size
 const margin = ({top: 20, right: 30, bottom: 30, left: 40})
 const filterSet = new Set();
 
-const n = 20;
+let n = 15;
 //green, orangey, dark blue, dark red, 
 const colorScheme = ["#9aa16a", "#cae0ad", "#8e9191", "#fcba03",  "#50a15b"];
 // colorScheme.sort();
@@ -92,8 +92,6 @@ let colorScale = d3.scaleOrdinal()
   const svg = d3.create('svg')
     .attr('width', width + 20)
     .attr('height', height+20);
-
-    const bandHeight = height / n;
 
     function pause(){
       timing = false;
@@ -206,10 +204,36 @@ let colorScale = d3.scaleOrdinal()
       gendersPool.add("M");
       doDataJoin(namesData, svg, parseInt(range.value));
     });
+
+    let lessBarsButton = document.getElementById('less-bars-button');
+    lessBarsButton.addEventListener('click', function(){
+      n = Math.max(1, n - 1);
+      showNumButtonsValue(n);
+      doDataJoin(namesData, svg, parseInt(range.value));
+    });
+
+    let moreBarsButton = document.getElementById('more-bars-button');
+    moreBarsButton.addEventListener('click', function(){
+      n = Math.min(30, n + 1);
+      showNumButtonsValue(n);
+      doDataJoin(namesData, svg, parseInt(range.value));
+    });
+
+
   
 doDataJoin(namesData, svg, 2000);
 document.getElementById("chart").appendChild(svg.node());
 
+function showNumButtonsValue(n){
+  let span_showing_nums = document.getElementById('num-bars-value');
+  if (n === 1){
+    span_showing_nums.innerText = n + " bar";
+  } else if (n === 30){
+    span_showing_nums.innerText = n + " bars (max)";
+  } else {
+    span_showing_nums.innerText = n + " bars";
+  }
+}
 
 function doDataJoin(namesData, svg, year){
   let filteredData = groupedByYear.get(parseInt(year)).filter(d => (d.srank < n || filterSet.has(d.name)) && gendersPool.has(d.sex));
@@ -231,8 +255,8 @@ function doDataJoin(namesData, svg, year){
   filteredData = filteredData.filter(d => d.graphRank < n);
   const bandScale = d3
   .scaleBand()
-  .domain(d3.range(n))
-  .range([0, height])
+  .domain(d3.range(30))
+  .range([0, height-20]) // we want this to only be half the bars
   const transition = svg.transition()
   .duration(500)
   .ease(d3.easeCubic);

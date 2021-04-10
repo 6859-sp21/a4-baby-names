@@ -119,3 +119,8 @@ img {
   font-size: large;
   font-weight: bold;
 }
+
+#num-bars-value {
+  display: inline-block;
+  font-size:14px;
+}
