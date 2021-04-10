@@ -40,8 +40,8 @@ a {
 }
 
 button:hover {
-  background-color: #731DD8;
-  color: #E4DFDA;
+  background-color: #cae0ad;
+  color: black;
 }
 
 button {
@@ -58,13 +58,14 @@ button {
   border:1px solid #b56d07;
 }
 
+
 button:focus{
   background-color : #D4B483;
 }
 
 .button-stay:focus {
   background-color : black;
-  color: #D4B483;
+  color: #cae0ad;
 }
 .slider {
   width: 100%;
