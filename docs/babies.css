@@ -148,3 +148,10 @@ datalist{
   width:100%;
   justify-content: space-between;
 }
+
+.bottom {
+  position: fixed;
+  bottom: 0;
+  text-align: right;
+  width: 98%;
+}
