@@ -47,10 +47,29 @@
 </div>
 </div> -->
 
+	<input type="range" min="1880" max="2019" value="2000" class="slider" id="myRange" list="richterscale" style='width:100%' oninput="amount.value=rangeInput.value">
+	<datalist id="richterscale">
+		<option>1880</option>
+		<option>1890</option>
+		<option>1900</option>
+		<option>1910</option>
+		<option>1920</option>
+    <option>1930</option>
+		<option>1940</option>
+		<option>1950</option>
+		<option>1960</option>
+		<option>1970</option>
+    <option>1980</option>
+		<option>1990</option>
+		<option>2000</option>
+		<option>2010</option>
+		<option>2019</option>
+	</datalist>
+  <output id="amount" name="amount" for="rangeInput">1880</output>
 
-  <div class="slidecontainer">
-    <input type="range" min="1880" max="2019" value="2000" class="slider" id="myRange" style='width:100%'>
-  </div>
+  <!-- <div class="slidecontainer">
+    <input type="range" min="1880" max="2019" value="2000" class="slider" id="myRange" style='width:100%' list="ritcherscale">
+  </div> -->
 
 
     <div class="textinpanel">

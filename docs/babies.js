@@ -28,6 +28,8 @@
 //     
 
 
+
+
 const namesByStatePath = "./stateData/";
 
 //columns: name, sex, count, year, index, will append rank
