@@ -301,11 +301,15 @@ function doDataJoin(namesData, svg, year){
         
     bars.select("text")
         .data(filteredData)
-        .attr("x", function(d) { return 20; })
         .attr("y", d => bandScale.bandwidth()/2 + 4)
         .attr("fill", "black")
         .attr("font-size", bandScale.bandwidth()/2)
-        .text(function(d) { return d.name});
+        .attr("text-anchor", "end")
+        .text(function(d) { return d.count})
+        .transition(transition)
+        .duration(750)
+        .ease(d3.easeQuadOut)
+        .attr("x", function(d) { return Math.max(xScale(d.count), 120); });
 
     text.selectAll("tspan")
           .data(filteredData)
@@ -313,12 +317,12 @@ function doDataJoin(namesData, svg, year){
 
     bars.select("tspan")
           .data(filteredData)
-          .attr("x", function(d) { return Math.max(xScale(d.count), 120); })
+          .attr("x", function(d) { return 20; })
           .attr("y", d => bandScale.bandwidth()/2 + 4)
           .attr("fill", "black")
           .attr("font-size", bandScale.bandwidth()/2)
-          .text(function(d) { return d.count})
-          .attr("text-anchor", "end");
+          .text(function(d) { return d.name})
+          .attr("text-anchor", "start")
 
     bars.exit().remove();
   }
