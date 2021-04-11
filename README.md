@@ -1,6 +1,8 @@
 # a4-baby-names
 a4-baby-names created by GitHub Classroom
 
+https://6859-sp21.github.io/a4-baby-names/
+
 By Elizabeth Weeks & Benton Wilson
 
 ## Design Decisions 
