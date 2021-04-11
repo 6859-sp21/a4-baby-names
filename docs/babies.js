@@ -288,19 +288,33 @@ function doDataJoin(namesData, svg, year){
         .attr('fill', d => colorScale(hashCode(d.name, d.sex)))
         .ease(d3.easeQuadOut)
         .attr("width", d => xScale(d.count))
+        .attr("x", "10")
         // .attr("stroke", d => (filterSet.has(d.name)) ? "white": "white")
 
-    bars.selectAll("text")
+    text = bars.selectAll("text")
         .data(filteredData)
         .join("text");
         
     bars.select("text")
         .data(filteredData)
-        .attr("x", function(d) { return 10; })
+        .attr("x", function(d) { return 20; })
         .attr("y", d => bandScale.bandwidth()/2 + 4)
         .attr("fill", "black")
         .attr("font-size", bandScale.bandwidth()/2)
-        .text(function(d) { return d.name + ", " + d.sex + ", " + d.count});
+        .text(function(d) { return d.name});
+
+    text.selectAll("tspan")
+          .data(filteredData)
+          .join("tspan");
+
+    bars.select("tspan")
+          .data(filteredData)
+          .attr("x", function(d) { return Math.max(xScale(d.count), 120); })
+          .attr("y", d => bandScale.bandwidth()/2 + 4)
+          .attr("fill", "black")
+          .attr("font-size", bandScale.bandwidth()/2)
+          .text(function(d) { return d.count})
+          .attr("text-anchor", "end");
 
     bars.exit().remove();
   }

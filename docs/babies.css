@@ -155,3 +155,7 @@ datalist{
   text-align: right;
   width: 98%;
 }
+
+text.shadow {
+  background-color:white;
+}
