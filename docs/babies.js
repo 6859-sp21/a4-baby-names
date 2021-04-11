@@ -253,6 +253,10 @@ function doDataJoin(namesData, svg, year){
   }
 
   filteredData = filteredData.filter(d => d.graphRank < n);
+
+  xScale = d3.scaleLinear()
+  .domain([0, d3.max(filteredData, d => d.count)]) // TODO this should adjust based on the year
+  .range([margin.left, (width - margin.right)*.8])
   const bandScale = d3
   .scaleBand()
   .domain(d3.range(30))
