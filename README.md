@@ -26,4 +26,4 @@ Our second chunk was around 7 hours which was again pair programming.  We starte
 
 Our last chunk was about 5 hours each after the peer review feedback was received.  This was partially pair programming with some final touches being implemented individually.  For this we needed to make updates based on the feedback.  These included changing the bar colors to the standard brown color and making the selected bars their own color.  We also removed the sex from the bars and separated the name and count to opposite ends of the bar.  Furthermore, we added ticks and labels to the slider.  We also made the bars transition in a smoother fashion.  We added the ability to choose the number of bars and changed the bars so that the top bar is the full length of the svg.
 
-Total we spent around 22 hours each working on this project. 
+Total we spent around 22 hours each working on this project and the initial data join is what took the most time. 
